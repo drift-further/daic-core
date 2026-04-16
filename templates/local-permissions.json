@@ -1,0 +1,4 @@
+{
+  "_doc": "Project-specific permissions merged into settings.json by install.sh. See local-permissions.md.",
+  "allow": []
+}

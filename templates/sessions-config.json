@@ -1,0 +1,35 @@
+{
+  "developer_name": "Developer",
+  "trigger_phrases": [
+    "implement it",
+    "fix it",
+    "continue implementation",
+    "do it",
+    "go ahead",
+    "make it so",
+    "run that"
+  ],
+  "blocked_tools": [
+    "NotebookEdit"
+  ],
+  "task_detection": {
+    "enabled": true
+  },
+  "branch_enforcement": {
+    "enabled": true
+  },
+  "security": {
+    "enabled": true,
+    "block_sensitive_paths": true,
+    "block_path_traversal": true
+  },
+  "api_mode": false,
+  "task_prefixes": {
+    "priority": [
+      "h-",
+      "m-",
+      "l-",
+      "?-"
+    ]
+  }
+}

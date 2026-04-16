@@ -1,0 +1,19 @@
+# Runtime state (populated by install.sh / hooks)
+.claude/state/
+.claude/hooks/
+.claude/statusline-script.py
+
+# Local overrides and backups
+.claude/settings.local.json
+.claude/settings.json.backup.*
+.claude/local-permissions.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,30 @@
+{
+  "name": "daic-workflow",
+  "version": "1.0.0",
+  "description": "DAIC (Discussion, Alignment, Implementation, Check) workflow discipline for Claude Code",
+  "author": "Drift Further LLC",
+  "license": "MIT",
+  "homepage": "https://github.com/drift-further/daic-workflow",
+  "keywords": [
+    "claude-code",
+    "workflow",
+    "discipline",
+    "task-management",
+    "branch-enforcement"
+  ],
+  "engines": {
+    "claude-code": ">=1.0.0"
+  },
+  "hooks": "hooks/hooks.json",
+  "commands": "commands/",
+  "dependencies": {
+    "python": ">=3.9",
+    "tiktoken": "optional"
+  },
+  "configuration": {
+    "sessions-config.json": {
+      "description": "Runtime configuration for DAIC workflow",
+      "location": "sessions/sessions-config.json"
+    }
+  }
+}
