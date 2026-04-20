@@ -301,7 +301,7 @@ _prompt_yes_no() {
     fi
     read -r -p "  $question $prompt " answer
     answer="${answer:-$default}"
-    [[ "${answer,,}" == "y" ]]
+    [[ "$(echo "$answer" | tr '[:upper:]' '[:lower:]')" == "y" ]]
 }
 
 if [[ "$INTERACTIVE" == true ]]; then
@@ -309,7 +309,7 @@ if [[ "$INTERACTIVE" == true ]]; then
     echo "DAIC Workflow Installer"
     read -r -p "  Profile [S]tandard / minimal / full / custom? " _profile_input
     _profile_input="${_profile_input:-S}"
-    case "${_profile_input,,}" in
+    case "$(echo "$_profile_input" | tr '[:upper:]' '[:lower:]')" in
         m|minimal)
             PROFILE=minimal
             _apply_profile_defaults minimal
@@ -333,7 +333,7 @@ if [[ "$INTERACTIVE" == true ]]; then
             fi
             read -r -p "  ─ Permissions [S]tandard / strict / permissive?     [S] " _perm_input
             _perm_input="${_perm_input:-S}"
-            case "${_perm_input,,}" in
+            case "$(echo "$_perm_input" | tr '[:upper:]' '[:lower:]')" in
                 strict)   PERMISSION_PROFILE=strict ;;
                 p|permissive) PERMISSION_PROFILE=permissive ;;
                 *)        PERMISSION_PROFILE=standard ;;

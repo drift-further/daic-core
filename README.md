@@ -13,14 +13,21 @@ A comprehensive workflow discipline system for Claude Code that enforces Discuss
 
 ## Installation
 
-### Method 1: Claude Code Plugin (Recommended)
+### Recommended: Clone to ~/.claude/plugins/ and Install
 
 ```bash
-# From within Claude Code
-/plugin install path/to/daic-workflow
+# Step 1: Navigate to plugins directory and clone
+cd ~/.claude/plugins/
+gh repo clone drift-further/daic-core
+
+# Step 2: Run the installer
+cd daic-core
+./install.sh /path/to/your/project
 ```
 
-### Method 2: Manual Installation
+### Alternative Methods
+
+**Method 1: Manual Installation**
 
 ```bash
 # Clone or copy the plugin to your project
@@ -34,7 +41,7 @@ cd /path/to/project
 .claude/plugins/daic-core/install.sh
 ```
 
-### Method 3: Git Submodule
+**Method 2: Git Submodule**
 
 ```bash
 # Add as a submodule
