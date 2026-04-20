@@ -24,24 +24,24 @@ A comprehensive workflow discipline system for Claude Code that enforces Discuss
 
 ```bash
 # Clone or copy the plugin to your project
-cp -r daic-workflow ~/.claude/plugins/
+cp -r daic-core ~/.claude/plugins/
 
 # Or for project-specific installation
-cp -r daic-workflow /path/to/project/.claude/plugins/
+cp -r daic-core /path/to/project/.claude/plugins/
 
 # Run the setup script
 cd /path/to/project
-.claude/plugins/daic-workflow/install.sh
+.claude/plugins/daic-core/install.sh
 ```
 
 ### Method 3: Git Submodule
 
 ```bash
 # Add as a submodule
-git submodule add https://github.com/drift-further/daic-workflow.git .claude/plugins/daic-workflow
+git submodule add https://github.com/drift-further/daic-core.git .claude/plugins/daic-core
 
 # Initialize
-.claude/plugins/daic-workflow/install.sh
+.claude/plugins/daic-core/install.sh
 ```
 
 ## Configuration
