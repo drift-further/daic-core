@@ -75,6 +75,99 @@ Create `sessions/sessions-config.json` in your project:
 }
 ```
 
+### Installer Configuration
+
+The installer supports profiles and feature flags for non-interactive and custom setups.
+
+#### Profiles
+
+```bash
+# Standard (default) — all features, standard permissions
+./install.sh /path/to/project --profile=standard
+
+# Minimal — core hooks only, strict permissions, no statusline/tier-docs
+./install.sh /path/to/project --profile=minimal
+
+# Full — all features, permissive permissions, Python venv
+./install.sh /path/to/project --profile=full
+
+# Non-interactive with explicit profile (CI/scripts)
+./install.sh /path/to/project --profile=minimal --yes
+```
+
+| Profile | Tier Docs | Statusline | Permissions | Agent Teams | Venv |
+|---------|-----------|------------|-------------|-------------|------|
+| minimal | off | off | strict | off | off |
+| standard | on | on | standard | on | off |
+| full | on | on | permissive | on | on |
+
+#### Feature Flags
+
+Override individual features regardless of profile:
+
+| Flag | Effect |
+|------|--------|
+| `--no-tier-scaffolding` | Skip tiered docs dirs and scaffold READMEs |
+| `--no-statusline` | Skip statusline symlink |
+| `--permissions=strict\|standard\|permissive` | Override permission set |
+| `--no-pre-compact` | Skip PreCompact hook |
+| `--no-agent-teams` | Skip agent teams env var |
+| `--no-project-hooks` | Skip project hooks extension dir |
+| `--no-local-permissions` | Skip local-permissions.json |
+| `--venv` | Set up Python venv (overrides profile default) |
+| `--yes` / `-y` | Assume yes to all prompts (non-interactive) |
+| `--non-interactive` | Fully suppress prompts, use resolved defaults |
+| `--global` | Install statusline into `~/.claude/settings.json` (all projects) |
+
+#### Interactive Mode
+
+When run in a terminal without `--yes`, the installer prompts for a profile:
+
+```
+DAIC Workflow Installer
+  Profile [S]tandard / minimal / full / custom?
+```
+
+Choosing `custom` shows five grouped questions:
+
+```
+  ─ Tiered docs + scaffold READMEs + tier reminder?  [Y]/n
+  ─ DAIC statusline?                                  [Y]/n
+  ─ Permissions [S]tandard / strict / permissive?     [S]
+  ─ Optional hooks (pre-compact, agent-teams, project-hooks, local-permissions)? [Y]/n
+  ─ Python venv?                                      y/[N]
+  Install statusline globally (~/.claude) for all projects? y/[N]
+  Proceed? [Y]/n
+```
+
+#### Tier Reminder
+
+When tiered docs are installed, the session-start hook injects a 6-line tier
+reminder before `docs/ACTIVE_CONTEXT.md` for the first 5 sessions. Control
+this via `sessions/sessions-config.json`:
+
+```json
+{
+  "tier_reminder": "auto"
+}
+```
+
+Values: `"auto"` (first 5 sessions), `true` (always), `false` (never).
+
+#### Global Statusline
+
+Install the statusline once for all Claude Code projects instead of per-project:
+
+```bash
+# Global only (no project setup)
+./install.sh --global
+
+# Combined with project install
+./install.sh /path/to/project --profile=standard --global --yes
+```
+
+This symlinks `statusline-script.py` to `~/.claude/daic/statusline-script.py` and writes the `statusLine` key into `~/.claude/settings.json`.
+
 ## Usage
 
 ### DAIC Workflow

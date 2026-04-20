@@ -16,6 +16,72 @@ from shared_state import get_project_root, ensure_state_dir, get_task_state, run
 # Get project root
 PROJECT_ROOT = get_project_root()
 
+TIER_REMINDER_TEXT = """\
+== TIER REMINDER ==
+HOT (docs/ACTIVE_CONTEXT.md): current session state only, <=200 lines.
+WARM (docs/architecture/, docs/patterns/): design + patterns, update when interfaces change.
+COLD (docs/backlog/archive/): completed work, move on COMPLETED or 90d idle.
+Full rules: docs/TIERED_DOCUMENTATION_GUIDE.md
+== End TIER REMINDER ==
+
+"""
+
+
+def tier_reminder_block(project_root: Path) -> str:
+    """Return tier reminder text if gates pass, else empty string.
+
+    Gates:
+    1. sessions/sessions-config.json must exist and contain 'tier_reminder' key.
+    2. docs/architecture/ directory must exist (scaffold was installed).
+    3. Value semantics:
+       - "auto"  → inject if counter < 5, then increment counter
+       - True    → always inject (no counter)
+       - False   → never inject
+    """
+    try:
+        config_file = project_root / "sessions" / "sessions-config.json"
+        if not config_file.exists():
+            return ""
+        with open(config_file) as f:
+            config = json.load(f)
+        reminder_setting = config.get("tier_reminder")
+        if reminder_setting is None or reminder_setting is False or reminder_setting == "false":
+            return ""
+
+        # Scaffold gate: docs/architecture/ must exist
+        if not (project_root / "docs" / "architecture").is_dir():
+            return ""
+
+        if reminder_setting is True or reminder_setting == "true":
+            return TIER_REMINDER_TEXT
+
+        if reminder_setting == "auto":
+            counter_file = project_root / ".claude" / "state" / "tier-reminder-count.json"
+            try:
+                if counter_file.exists():
+                    count = json.loads(counter_file.read_text()).get("count", 0)
+                else:
+                    count = 0
+            except Exception:
+                count = 0
+
+            if count >= 5:
+                return ""
+
+            # Increment and persist
+            try:
+                counter_file.parent.mkdir(parents=True, exist_ok=True)
+                counter_file.write_text(json.dumps({"count": count + 1}))
+            except Exception:
+                pass  # Non-fatal: still inject this session
+
+            return TIER_REMINDER_TEXT
+
+        # Unknown value → treat as disabled
+        return ""
+    except Exception:
+        return ""  # Never crash session-start
+
 
 def load_active_context() -> str:
     """Load docs/ACTIVE_CONTEXT.md if it exists, with graceful fallback.
@@ -206,7 +272,8 @@ Or follow the manual setup in the documentation.
 """
 
 # Load ACTIVE_CONTEXT.md (Tiered Documentation System - HOT tier)
-# This is loaded regardless of sessions setup - it's project documentation
+# Tier reminder is injected before ACTIVE_CONTEXT to frame the reading
+context += tier_reminder_block(PROJECT_ROOT)
 context += load_active_context()
 
 # Run project-specific session start extension
